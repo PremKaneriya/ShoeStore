@@ -1,0 +1,64 @@
+{
+    "shoes": [
+        {
+            "id": 1,
+            "name": "Adidas",
+            "orgPrice": 100,
+            "price": 210,
+            "image": "img/product/p1.jpg",
+            "description": "Adidas shoes are known for their quality, comfort, and style. These shoes feature a durable construction, cushioned insoles, and a sleek design. Whether you're hitting the gym or going for a casual outing, Adidas shoes are a perfect choice.",
+            "color": "red",
+            "category": "shoes"
+        },
+        {
+            "id": 2,
+            "name": "Nike",
+            "orgPrice": 120,
+            "price": 220,
+            "image": "img/product/p2.jpg",
+            "description": "Nike shoes are synonymous with performance and innovation. Designed with cutting-edge technology, these shoes offer superior support, flexibility, and breathability. Elevate your athletic performance and style with Nike shoes.",
+            "color": "blue",
+            "category": "sneakers"
+        },
+        {
+            "id": 3,
+            "name": "Puma",
+            "orgPrice": 90,
+            "price": 200,
+            "image": "img/product/p3.jpg",
+            "description": "Puma shoes combine fashion and function to deliver footwear that stands out on the streets and performs on the track. With a heritage rooted in sports, Puma shoes offer comfort, durability, and style for everyday wear.",
+            "color": "green",
+            "category": "sneakers"
+        },
+        {
+            "id": 4,
+            "name": "Reebok",
+            "orgPrice": 110,
+            "price": 230,
+            "image": "img/product/p4.jpg",
+            "description": "Reebok shoes are crafted for athletes and fitness enthusiasts who demand performance and style. Featuring innovative technologies and ergonomic designs, Reebok shoes provide the support and comfort you need to reach your goals.",
+            "color": "yellow",
+            "category": "sneakers"
+        },
+        {
+            "id": 5,
+            "name": "Skechers",
+            "orgPrice": 95,
+            "price": 215,
+            "image": "img/product/p5.jpg",
+            "description": "Skechers shoes are known for their comfort, versatility, and trend-setting designs. From casual sneakers to performance footwear, Skechers offers a wide range of styles to suit every occasion. Step into comfort and style with Skechers shoes.",
+            "color": "black",
+            "category": "shoes"
+        },
+        {
+            "id": 6,
+            "name": "Under Armour",
+            "orgPrice": 105,
+            "price": 225,
+            "image": "img/product/p6.jpg",
+            "description": "Under Armour shoes are engineered to enhance your performance and push your limits. Designed with cutting-edge materials and technologies, Under Armour shoes deliver unrivaled comfort, support, and durability. Elevate your game with Under Armour shoes.",
+            "color": "black",
+            "category": "sneakers"
+        }
+    ]
+}
