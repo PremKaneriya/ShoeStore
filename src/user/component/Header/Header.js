@@ -24,7 +24,6 @@ const Header = () => {
                                         <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Shop</a>
                                         <ul className="dropdown-menu">
                                             <li className="nav-item"><NavLink className="nav-link" to="/category">Shop Category</NavLink></li>
-                                            <li className="nav-item"><NavLink className="nav-link" to="/productdetails" >Product Details</NavLink></li>
                                             <li className="nav-item"><NavLink className="nav-link" to="/checkout" >Product Checkout</NavLink></li>
                                             <li className="nav-item"><NavLink className="nav-link" to="/cart" >Shopping Cart</NavLink></li>
                                             <li className="nav-item"><NavLink className="nav-link" to="/confirmation" >Confirmation</NavLink></li>

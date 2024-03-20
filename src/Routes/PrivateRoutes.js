@@ -6,7 +6,7 @@ const PrivateRoutes = () => {
   return (
     <>
      <h1>PrivateRoutes</h1>
-     {isAuthenticate ? <Outlet/> : <Navigate to='/' />} 
+     {isAuthenticate ? <Outlet/> : <Navigate to='/' replace />} 
     </>
   )
 }

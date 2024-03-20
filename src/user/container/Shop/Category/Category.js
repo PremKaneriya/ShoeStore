@@ -6,6 +6,11 @@ const Category = () => {
     const [shoes, setShoes] = useState([])
     const [category, setCategory] = useState([])
     const [sortBy, setSortBy] = useState('')
+    const [sorting, setsorting] = useState('')
+    const [brandName, setBrandName] = useState([]);
+    const [brandSort, setBrandSort] = useState('');
+    const [colorList, setColorList] = useState([]);
+    const [selectedColor, setSelectedColor] = useState('');
 
     const shoesData = async () => {
         const res = await fetch('http://localhost:8000/shoes')
@@ -13,6 +18,12 @@ const Category = () => {
 
         let uniqueCategory = [...new Set(data.map(item => item.category))]
 
+        let shoeNames = [...new Set(data.map(item => item.name))];
+
+        let uniqueColors = [...new Set(data.map(item => item.color))];
+
+        setColorList(uniqueColors);
+        setBrandName(shoeNames);
         setCategory(uniqueCategory)
         setShoes(data)
     }
@@ -25,7 +36,51 @@ const Category = () => {
         setSortBy(selectedCategory);
     };
 
-    const finalData = sortBy ? shoes.filter(item => item.category === sortBy) : shoes;
+    const handleBrandChange = (selectedBrand) => {
+        setBrandSort(selectedBrand);
+    }
+
+    const handleColorChange = (selectedColor) => {
+        setSelectedColor(selectedColor);
+    }
+
+    const handleSortingChange = (e) => {
+        setsorting(e.target.value);
+    };
+
+    const handleAllData = () => {
+        let filteredData = {}
+
+        if (sortBy) {
+            filteredData = shoes.filter((item) => item.category === sortBy);
+        } else {
+            filteredData = shoes;
+        }
+
+        if (brandSort) {
+            filteredData = filteredData.filter((item) => item.name === brandSort);
+        }
+
+        if (selectedColor) {
+            filteredData = filteredData.filter((item) => item.color === selectedColor);
+        }
+
+        if (sorting === "atoz") {
+            filteredData = filteredData.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sorting === "ztoa") {
+            filteredData = filteredData.sort((a, b) => b.name.localeCompare(a.name));
+        } else if (sorting === "lowtohigh") {
+            filteredData = filteredData.sort((a, b) => a.orgPrice - b.orgPrice);
+        } else if (sorting === "hightolow") {
+            filteredData = filteredData.sort((a, b) => b.orgPrice - a.orgPrice);
+        } else {
+            filteredData = filteredData;
+        }
+
+        return filteredData
+    }
+
+    const finalData = handleAllData();
 
     let { id } = useParams();
 
@@ -73,11 +128,14 @@ const Category = () => {
                                     <div className="head">Brands</div>
                                     <form action="#">
                                         <ul>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="apple" name="brand" /><label htmlFor="apple">Apple<span>(29)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="asus" name="brand" /><label htmlFor="asus">Asus<span>(29)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="gionee" name="brand" /><label htmlFor="gionee">Gionee<span>(19)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="micromax" name="brand" /><label htmlFor="micromax">Micromax<span>(19)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="samsung" name="brand" /><label htmlFor="samsung">Samsung<span>(19)</span></label></li>
+                                            {/* find brand name */}
+                                            {brandName.map((item, index) => (
+                                                <li className="filter-list" key={index} onClick={() => handleBrandChange(item)}>
+                                                    <input className="pixel-radio" type="radio" id={item} name="brand" />
+                                                    <label htmlFor={item}>{item}</label>
+                                                </li>
+                                            ))}
+                                            {/* <li className="filter-list"><input className="pixel-radio" type="radio" id="apple" name="brand" /><label htmlFor="apple">Apple<span>(29)</span></label></li> */}
                                         </ul>
                                     </form>
                                 </div>
@@ -85,57 +143,29 @@ const Category = () => {
                                     <div className="head">Color</div>
                                     <form action="#">
                                         <ul>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="black" name="color" /><label htmlFor="black">Black<span>(29)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="balckleather" name="color" /><label htmlFor="balckleather">Black
-                                                Leather<span>(29)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="blackred" name="color" /><label htmlFor="blackred">Black
-                                                with red<span>(19)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="gold" name="color" /><label htmlFor="gold">Gold<span>(19)</span></label></li>
-                                            <li className="filter-list"><input className="pixel-radio" type="radio" id="spacegrey" name="color" /><label htmlFor="spacegrey">Spacegrey<span>(19)</span></label></li>
+                                            {colorList.map((color, index) => (
+                                                <li className="filter-list" key={index} onClick={() => handleColorChange(color)}>
+                                                    <input className="pixel-radio" type="radio" id={color} name="color" />
+                                                    <label htmlFor={color}>{color}</label>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </form>
                                 </div>
-                                <div className="common-filter">
-                                    <div className="head">Price</div>
-                                    <div className="price-range-area">
-                                        <div id="price-range" />
-                                        <div className="value-wrapper d-flex">
-                                            <div className="price">Price:</div>
-                                            <span>$</span>
-                                            <div id="lower-value" />
-                                            <div className="to">to</div>
-                                            <span>$</span>
-                                            <div id="upper-value" />
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                         <div className="col-xl-9 col-lg-8 col-md-7">
                             {/* Start Filter Bar */}
                             <div className="filter-bar d-flex flex-wrap align-items-center">
-                                <div className="sorting">
-                                    <select>
-                                        <option value={1}>Default sorting</option>
-                                        <option value={1}>Default sorting</option>
-                                        <option value={1}>Default sorting</option>
-                                    </select>
-                                </div>
                                 <div className="sorting mr-auto">
-                                    <select>
-                                        <option value={1}>Show 12</option>
-                                        <option value={1}>Show 12</option>
-                                        <option value={1}>Show 12</option>
+                                    <select onChange={handleSortingChange} value={sorting}>
+                                        <option value=''>- Sort Data -</option>
+                                        <option value='atoz'>A to Z</option>
+                                        <option value='ztoa'>Z to A</option>
+                                        <option value='lowtohigh'>Price : Low to High</option>
+                                        <option value='hightolow'>Price : High to Low</option>
                                     </select>
-                                </div>
-                                <div className="pagination">
-                                    <a href="#" className="prev-arrow"><i className="fa fa-long-arrow-left" aria-hidden="true" /></a>
-                                    <a href="#" className="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#" className="dot-dot"><i className="fa fa-ellipsis-h" aria-hidden="true" /></a>
-                                    <a href="#">6</a>
-                                    <a href="#" className="next-arrow"><i className="fa fa-long-arrow-right" aria-hidden="true" /></a>
                                 </div>
                             </div>
                             {/* End Filter Bar */}
@@ -184,13 +214,6 @@ const Category = () => {
                             {/* End Best Seller */}
                             {/* Start Filter Bar */}
                             <div className="filter-bar d-flex flex-wrap align-items-center">
-                                <div className="sorting mr-auto">
-                                    <select>
-                                        <option value={1}>Show 12</option>
-                                        <option value={1}>Show 12</option>
-                                        <option value={1}>Show 12</option>
-                                    </select>
-                                </div>
                                 <div className="pagination">
                                     <a href="#" className="prev-arrow"><i className="fa fa-long-arrow-left" aria-hidden="true" /></a>
                                     <a href="#" className="active">1</a>
