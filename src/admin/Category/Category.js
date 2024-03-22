@@ -9,7 +9,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
 import { DataGrid } from '@mui/x-data-grid';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 let categorySchema = object({
     category: string().required().matches(/^[a-zA-Z'-\s]*$/, 'Invalid name').min(2, 'Use a valid name').max(15, 'Use a valid name'),
@@ -17,22 +18,25 @@ let categorySchema = object({
 });
 
 const Category = () => {
+    const [open, setOpen] = React.useState(false);
+    const [rowData, setRowData] = useState([])
+    const [update, setUpdate] = useState(null)
+
     const handleAddData = (data) => {
-
-        let localData = JSON.parse(localStorage.getItem('categories'))
-
-        const rNo = Math.floor(Math.random() * 1000)
-
-        if (localStorage) {
-            localData.push({ ...data, id: rNo })
-            localStorage.setItem('categories', JSON.stringify(localData));
-        } else {
-            localStorage.setItem('categories', JSON.stringify({ ...data, id: rNo }))
-        }
-
-        getData()
-
+        let localData = JSON.parse(localStorage.getItem('shoeCategory')) || [];
+        const rNo = Math.floor(Math.random() * 1000);
+        localData.push({ ...data, id: rNo });
+        localStorage.setItem('shoeCategory', JSON.stringify(localData));
+        getData();
     }
+
+    const handleEditData = (data) => {
+        let localData = JSON.parse(localStorage.getItem('shoeCategory')) || [];
+        let index = localData.findIndex((item) => item.id === data.id);
+        localData[index] = data;
+        localStorage.setItem('shoeCategory', JSON.stringify(localData));
+        getData();
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -41,7 +45,11 @@ const Category = () => {
         },
         validationSchema: categorySchema,
         onSubmit: values => {
-            handleAddData(values)
+            if (update) {
+                handleEditData({ ...values, id: update });
+            } else {
+                handleAddData(values);
+            }
             formik.resetForm()
             handleClose()
         },
@@ -49,8 +57,7 @@ const Category = () => {
 
     const { handleSubmit, handleChange, handleBlur, values, touched, errors } = formik
 
-    const [open, setOpen] = React.useState(false);
-    const [rowData, setRowData] = useState([])
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -58,16 +65,20 @@ const Category = () => {
 
     const handleClose = () => {
         setOpen(false);
+        formik.resetForm()
+        setUpdate(null)
     };
 
     const getData = () => {
-        let localData = JSON.parse(localStorage.getItem('categories'))
-
-        if (localData) {
-            setRowData(localData)
-        }
-
+        let localData = JSON.parse(localStorage.getItem('shoeCategory'))
+        setRowData(localData)
     }
+
+    const handleEdit = (data) => {
+        formik.setValues(data);
+        setOpen(true);
+        setUpdate(data.id);
+    };
 
     useEffect(() => {
         getData()
@@ -89,12 +100,26 @@ const Category = () => {
                     Remove
                 </Button>
             ),
-        }
+        },
+        {
+            field: 'edit',
+            headerName: 'Edit',
+            width: 100,
+            renderCell: (params) => (
+                <Button
+                    variant="contained" color="success"
+                    onClick={() => handleEdit(params.row)}
+                >
+                    Edit
+                    <BorderColorIcon />
+                </Button>
+            ),
+        },
     ]
 
     const handleRemove = (id) => {
         let updateData = rowData.filter((item) => item.id !== id)
-        localStorage.setItem('categories', JSON.stringify(updateData))
+        localStorage.setItem('shoeCategory', JSON.stringify(updateData))
         setRowData(updateData)
     }
 
@@ -151,7 +176,7 @@ const Category = () => {
 
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">{update ? 'Update' : 'Submit'}</Button>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
