@@ -1,6 +1,29 @@
 import React from 'react'
+import { object, string, number, date, InferType } from 'yup';
+import { useFormik } from 'formik';
+
+let contactSchema = object({
+    name: string().required(),
+    email: string().required().email(),
+    message: string().required().min(5, 'Too Short!').max(1000, 'Too Long!'),
+});
 
 const Contact = () => {
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            message: '',
+        },
+        validationSchema: contactSchema,
+        onSubmit: values => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
+
+    const { handleSubmit, handleChange, handleBlur, values, touched, errors } = formik
+
     return (
         <>
             <div>
@@ -45,21 +68,21 @@ const Contact = () => {
                                 </div>
                             </div>
                             <div className="col-lg-9">
-                                <form className="row contact_form" action="contact_process.php" method="post" id="contactForm" noValidate="novalidate">
+                                <form className="row contact_form" onSubmit={handleSubmit} action="contact_process.php" method="post" id="contactForm" noValidate="novalidate">
                                     <div className="col-md-6">
                                         <div className="form-group">
-                                            <input type="text" className="form-control" id="name" name="name" placeholder="Enter your name" />
+                                            <input type="text" onBlur={handleBlur} onChange={handleChange} value={values.name} className="form-control" id="name" name="name" placeholder="Enter your name" />
+                                            <span className="text-danger" >{errors.name && touched.name ? errors.name : ''}</span>
                                         </div>
                                         <div className="form-group">
-                                            <input type="email" className="form-control" id="email" name="email" placeholder="Enter email address" />
-                                        </div>
-                                        <div className="form-group">
-                                            <input type="text" className="form-control" id="subject" name="subject" placeholder="Enter Subject" />
+                                            <input type="email" onBlur={handleBlur} onChange={handleChange} value={values.email} className="form-control" id="email" name="email" placeholder="Enter email address" />
+                                            <span className="text-danger" >{errors.email && touched.email ? errors.email : ''}</span>
                                         </div>
                                     </div>
                                     <div className="col-md-6">
                                         <div className="form-group">
-                                            <textarea className="form-control" name="message" id="message" rows={1} placeholder="Enter Message" defaultValue={""} />
+                                            <textarea className="form-control" onBlur={handleBlur} onChange={handleChange} value={values.message} name="message" id="message" rows={1} placeholder="Enter Message" defaultValue={""} />
+                                            <span className="text-danger" >{errors.message && touched.message ? errors.message : ''}</span>
                                         </div>
                                     </div>
                                     <div className="col-md-12 text-right">

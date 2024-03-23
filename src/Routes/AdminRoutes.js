@@ -1,13 +1,21 @@
 import React from 'react'
-import Products from '../user/container/Products/Products'
 import { Route, Routes } from 'react-router-dom'
+import Shoes from '../admin/Shoes/Shoes'
+import Layout from '../admin/Layout/Layout'
+import PrivateRoutes from './PrivateRoutes'
+import ShoeBrand from '../admin/ShoeBrand/ShoeBrand'
+import Category from '../admin/Category/Category'
 
 const AdminRoutes = () => {
     return (
         <>
-            <Routes>
-                <Route exact path="products/*" element={<Products />} />
-            </Routes>
+            <Layout>
+                <Routes element={<PrivateRoutes />}>
+                    <Route path="shoes/" element={<Shoes />} />
+                    <Route path="shoebrand/" element={<ShoeBrand />} />
+                    <Route path="category/" element={<Category />} />
+                </Routes>
+            </Layout>
         </>
     )
 }
